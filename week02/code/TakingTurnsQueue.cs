@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 /// <summary>
 /// This queue is circular.  When people are added via AddPerson, then they are added to the 
 /// back of the queue (per FIFO rules).  When GetNextPerson is called, the next person
@@ -20,8 +22,10 @@ public class TakingTurnsQueue
     /// <param name="turns">Number of turns remaining</param>
     public void AddPerson(string name, int turns)
     {
-        var person = new Person(name, turns);
-        _people.Enqueue(person);
+     Person person = new Person(name, turns);
+    Debug.WriteLine($"Adding person: {person}");
+    _people.Enqueue(person);
+    Debug.WriteLine($"Queue after add: {_people}");
     }
 
     /// <summary>
@@ -31,27 +35,41 @@ public class TakingTurnsQueue
     /// person has an infinite number of turns.  An error exception is thrown 
     /// if the queue is empty.
     /// </summary>
-    public Person GetNextPerson()
-    {
-        if (_people.IsEmpty())
-        {
-            throw new InvalidOperationException("No one in the queue.");
-        }
-        else
-        {
-            Person person = _people.Dequeue();
-            if (person.Turns > 1)
-            {
-                person.Turns -= 1;
-                _people.Enqueue(person);
-            }
+public Person GetNextPerson()
+{
+    // Add debug print to see queue state before dequeue
+    Debug.WriteLine($"Queue before dequeue: {_people}");
 
-            return person;
-        }
+    if (_people.IsEmpty())
+    {
+        throw new InvalidOperationException("No one in the queue.");
     }
-
-    public override string ToString()
+    else
     {
-        return _people.ToString();
+        Person person = _people.Dequeue();
+        Debug.WriteLine($"Dequeued: {person}");
+
+        if (person.Turns > 1)
+        {
+            person.Turns -= 1;
+            _people.Enqueue(person);
+        }
+        else if (person.Turns == 1)
+        {
+            person.Turns -= 1;
+        }
+        else if (person.Turns <= 0)
+        {
+            _people.Enqueue(person);
+        }
+        
+        Debug.WriteLine($"Queue after operations: {_people}");
+        return person;
     }
 }
+public override string ToString()
+{
+    return _people.ToString();
+}
+}
+
