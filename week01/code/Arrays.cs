@@ -41,7 +41,7 @@ public static class Arrays
         // be implemented by another person.
 
 
-        // Step 1: Calculate the effective rotation, which is the amount modulo the count of the list. Only really necessary if the amount is greater than the count.
+        // Step 1: Calculate the effective rotation, which is the amount modulo the count of the list. Only really necessary if the amount is greater than the count but I thought why not?.
         int count = data.Count;
         amount = amount % count;
 
